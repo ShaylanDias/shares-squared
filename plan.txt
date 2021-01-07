@@ -1,0 +1,10 @@
+PODCASTS
+API:
+  - List (list all stored podcasts)
+  - Delete (delete a podcast by ID)
+  - Upload (add a podcast to both db/storage/etc)
+
+  Frontend:
+  - Landing Page
+  - Upload/Management User specific Page
+  - User page (lists all of their pods and lets someone play them)
