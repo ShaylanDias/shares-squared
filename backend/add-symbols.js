@@ -23,19 +23,15 @@ const checkValidity = async (symbol) => {
     "useQueryString": true
   });
 
-  let isValid = false;
-  req.end(function (res) {
-    if (res.error) return;
-    let quotes = res.body.quotes;
-    for (let quote of quotes) {
-      if (quote.symbol === symbol) {
-        isValid = true;
-        return;
-      }
+  const res = await req.send();
+  if (res.error) return symbol;
+  let quotes = res.body.quotes;
+  for (let quote of quotes) {
+    if (quote.symbol === symbol) {
+      return true;
     }
-  });
-  console.log(isValid);
-  return isValid || symbol;
+  }
+  return false;
 };
 
 
@@ -55,14 +51,11 @@ export const main = handler(async (event, context) => {
   // Resolve validity on all symbols asynchronously
   const validities = await Promise.all(symbols.map(ticker => checkValidity(ticker)));
   // Filter validities to only the invalidSymbols left
-  console.log(validities);
-  const invalid = validities.filter(validity => validity);
-  console.log(invalid);
+  const invalid = validities.filter(validity => validity !== true);
   // Return if invalid.
   if (invalid.length > 0) {
-    return { status: false, invalid: invalid };
+    throw new Error(`Invalid tickers: ${invalid}`);
   }
-  console.log("VALIDATED");
   // add ticker to database
 
   const params = {
