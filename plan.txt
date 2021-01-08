@@ -8,3 +8,18 @@ API:
   - Landing Page
   - Upload/Management User specific Page
   - User page (lists all of their pods and lets someone play them)
+
+  Stocks
+  API:
+  - List (must authenticate for current or old user)
+    - Get = get list by name or get all if no name given
+    - Post = create a new list
+  - Delete
+  - Add
+  - AutoComplete
+  - Add Friend
+
+  Frontend:
+  - Watchlist Page
+  - News Page
+

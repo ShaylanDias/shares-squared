@@ -1,0 +1,17 @@
+Watchlists
+listID: str
+userID: str - cognitoID
+
+WatchlistItems
+listID: str
+ticker: str
+
+Friends
+userID: str - cognitoID
+friendID: str - cognitoID
+status: str/enum (blocked, friend, pending, etc.)
+
+Users
+userID: str - cognitoID
+privacyStatus: public, friends, private
+email: str
