@@ -9,4 +9,5 @@ export default {
   update: (params) => client.update(params).promise(),
   delete: (params) => client.delete(params).promise(),
   scan: (params) => client.scan(params).promise(),
+  createSet: (list, options) => client.createSet(list, options),
 };

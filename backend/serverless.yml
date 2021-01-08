@@ -31,14 +31,8 @@ iamRoleStatements:
     Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
 functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: hello
-          method: get
-  add-ticker:
-    handler: add-ticker.main
+  watchlist:
+    handler: add-symbols.main
     events:
       - http:
           path: watchlist

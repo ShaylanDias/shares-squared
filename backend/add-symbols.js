@@ -38,16 +38,22 @@ const checkValidity = async (symbol) => {
   return isValid ? isValid : symbol;
 }
 
+
+input = {
+  symbols: [],
+  watchlistId: "name"
+}
+
 export const main = handler(async (event, context) => {
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
 
   // check user ID permissions
 
-  // Check stock ticker validity
-  const tickers = data.tickers;
-  // Resolve validity on all tickers asynchronously
-  const validities = await Promise.all(tickers.map(ticker => checkValidity(ticker)));
+  // Check stock symbol validity
+  const symbols = data.symbols;
+  // Resolve validity on all symbols asynchronously
+  const validities = await Promise.all(symbols.map(ticker => checkValidity(ticker)));
   // Filter validities to only the invalidSymbols left
   const invalid = validities.filter(validity => validity);
   // Return if invalid.
@@ -59,6 +65,14 @@ export const main = handler(async (event, context) => {
 
   const params = {
     TableName: tableName,
+    Key: {
+      userId: "123",
+      watchlistId: data.watchlist,
+    },
+    UpdateExpression: "ADD symbols :symbols",
+    ExpressionAttributeValues: {
+      ":symbols": dynamoDb.createSet(symbols)
+    },
     Item: {
       // The attributes of the item to be created
       userId: "123", // The id of the author
@@ -69,7 +83,7 @@ export const main = handler(async (event, context) => {
     },
   };
 
-  await dynamoDb.put(params).promise();
+  await dynamoDb.update(params).promise();
 
   return { status: true };
 });
