@@ -1,12 +1,13 @@
 import * as uuid from "uuid";
 import handler from "./libs/handler-lib";
 import dynamoDb from './libs/dynamodb-lib';
+import unirest from "unirest";
 
 const tableName = "watchlists";
 
 /**
  * Returns the symbol if it is invalid, else true
- * @param {*} symbol 
+ * @param {*} symbol
  */
 const checkValidity = async (symbol) => {
   let req = unirest("GET", "https://apidojo-yahoo-finance-v1.p.rapidapi.com/auto-complete");
@@ -18,15 +19,14 @@ const checkValidity = async (symbol) => {
 
   req.headers({
     "x-rapidapi-key": process.env.RAPIDAPI_KEY,
-    "x-rapidapi-host": provess.env.RAPIDAPI_HOST,
+    "x-rapidapi-host": process.env.RAPIDAPI_HOST,
     "useQueryString": true
   });
 
   let isValid = false;
   req.end(function (res) {
-    console.log(res.body);
     if (res.error) return;
-    let quotes = res.quotes;
+    let quotes = res.body.quotes;
     for (let quote of quotes) {
       if (quote.symbol === symbol) {
         isValid = true;
@@ -34,15 +34,15 @@ const checkValidity = async (symbol) => {
       }
     }
   });
+  console.log(isValid);
+  return isValid || symbol;
+};
 
-  return isValid ? isValid : symbol;
-}
 
-
-input = {
-  symbols: [],
-  watchlistId: "name"
-}
+// const input = {
+//   symbols: [],
+//   watchlistId: "name"
+// };
 
 export const main = handler(async (event, context) => {
   // Request body is passed in as a JSON encoded string in 'event.body'
@@ -55,12 +55,14 @@ export const main = handler(async (event, context) => {
   // Resolve validity on all symbols asynchronously
   const validities = await Promise.all(symbols.map(ticker => checkValidity(ticker)));
   // Filter validities to only the invalidSymbols left
+  console.log(validities);
   const invalid = validities.filter(validity => validity);
+  console.log(invalid);
   // Return if invalid.
   if (invalid.length > 0) {
     return { status: false, invalid: invalid };
   }
-
+  console.log("VALIDATED");
   // add ticker to database
 
   const params = {
