@@ -31,15 +31,21 @@ iamRoleStatements:
     Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
 functions:
-  symbols:
+  add-symbols:
     handler: add-symbols.main
     events:
       - http:
-          path: watchlist
+          path: symbols
           method: post
-  watchlist:
+  create-watchlist:
     handler: create-watchlist.main
     events:
       - http:
           path: watchlist
           method: post
+  delete-watchlist:
+    handler: delete-watchlist.main
+    events:
+      - http:
+          path: watchlist
+          method: delete
