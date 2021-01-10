@@ -58,27 +58,30 @@ export const main = handler(async (event, context) => {
   // }
   // add ticker to database
 
+  // const params = {
+  //   TableName: tableName,
+  //   Key: {
+  //     userId: "123",
+  //     watchlistId: data.watchlist,
+  //   },
+  //   UpdateExpression: "SET symbols = :symbols",
+  //   ExpressionAttributeValues: {
+  //     ":symbols": dynamoDb.createSet(symbols)
+  //   },
+  // };
+
   const params = {
     TableName: tableName,
-    Key: {
-      userId: "123",
-      watchlistId: data.watchlist,
+    Item: {
+      // The attributes of the item to be created
+      userId: "123", // The id of the author
+      watchlistId: data.watchlist, // A unique uuid
+      symbols: dynamoDb.createSet(symbols),
+      createdAt: Date.now(), // Current Unix timestamp
     },
-    UpdateExpression: "SET symbols = :symbols",
-    ExpressionAttributeValues: {
-      ":symbols": dynamoDb.createSet(symbols)
-    },
-    // Item: {
-    //   // The attributes of the item to be created
-    //   userId: "123", // The id of the author
-    //   noteId: uuid.v1(), // A unique uuid
-    //   content: data.content, // Parsed from request body
-    //   attachment: data.attachment, // Parsed from request body
-    //   createdAt: Date.now(), // Current Unix timestamp
-    // },
   };
 
-  await dynamoDb.update(params).promise();
+  await dynamoDb.put(params);
 
   return { status: true };
 });
