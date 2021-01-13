@@ -37,15 +37,18 @@ functions:
       - http:
           path: symbols
           method: post
+          authorizer: aws_iam
   create-watchlist:
     handler: create-watchlist.main
     events:
       - http:
           path: watchlist
           method: post
+          authorizer: aws_iam
   delete-watchlist:
     handler: delete-watchlist.main
     events:
       - http:
           path: watchlist
           method: delete
+          authorizer: aws_iam

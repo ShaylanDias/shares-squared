@@ -1,7 +1,7 @@
 // import * as uuid from "uuid";
 import handler from "./libs/handler-lib";
 import dynamoDb from './libs/dynamodb-lib';
-// import unirest from "unirest";
+import unirest from "unirest";
 
 const tableName = "watchlists";
 
@@ -43,6 +43,7 @@ const checkValidity = async (symbol) => {
 export const main = handler(async (event, context) => {
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
+  const id = event.requestContext.identity.cognitoIdentityId;
 
   // check user ID permissions
 
@@ -59,30 +60,33 @@ export const main = handler(async (event, context) => {
     throw new Error(`Invalid tickers: ${invalid}`);
   }
 
+  // const params = {
+  //   TableName: tableName,
+  //   Item: {
+  //     // The attributes of the item to be created
+  //     userId: id, // The id of the author
+  //     watchlistId: data.watchlist, // A unique uuid
+  //     symbols: dynamoDb.createSet(symbols),
+  //     createdAt: Date.now(), // Current Unix timestamp
+  //   },
+  // };
+
   const params = {
     TableName: tableName,
+    // 'Key' defines the partition key and sort key of the item to be updated
     Key: {
-      userId: "123",
-      watchlistId: data.watchlist,
+      userId: id, // The id of the author
+      watchlistId: data.watchlist, // The id of the note from the path
     },
-    UpdateExpression: "SET symbols = :symbols",
+    // 'UpdateExpression' defines the attributes to be updated
+    // 'ExpressionAttributeValues' defines the value in the update expression
+    UpdateExpression: "ADD symbols :symbols",
     ExpressionAttributeValues: {
       ":symbols": dynamoDb.createSet(symbols)
     },
   };
 
-  const params = {
-    TableName: tableName,
-    Item: {
-      // The attributes of the item to be created
-      userId: "123", // The id of the author
-      watchlistId: data.watchlist, // A unique uuid
-      symbols: dynamoDb.createSet(symbols),
-      createdAt: Date.now(), // Current Unix timestamp
-    },
-  };
-
-  await dynamoDb.put(params);
+  await dynamoDb.update(params);
 
   return { status: true };
 });

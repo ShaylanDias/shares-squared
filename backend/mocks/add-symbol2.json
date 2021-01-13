@@ -1,5 +1,5 @@
 {
-  "body": "{\"symbols\":[\"F\",\"TSLA\",\"AAPL\"],\"watchlist\":\"TestList\"}",
+  "body": "{\"symbols\":[\"IJR\",\"SPY\",\"PLTR\"],\"watchlist\":\"TestList\"}",
   "requestContext": {
     "identity": {
       "cognitoIdentityId": "TestUser1234"
