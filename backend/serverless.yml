@@ -16,7 +16,7 @@ provider:
   region: us-west-1
   environment:
     RAPIDAPI_HOST: apidojo-yahoo-finance-v1.p.rapidapi.com
-    RAPIDAPI_KEY: 8673d8f684msha909b32f0a5d086p14702ejsn01a0c0fcba73
+    RAPIDAPI_KEY: ${env:RAPIDAPI_KEY}
 
 iamRoleStatements:
   - Effect: Allow
