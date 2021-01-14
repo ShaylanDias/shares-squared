@@ -38,6 +38,7 @@ functions:
           path: symbols
           method: post
           authorizer: aws_iam
+          cors: true
   create-watchlist:
     handler: create-watchlist.main
     events:
@@ -45,6 +46,7 @@ functions:
           path: watchlist
           method: post
           authorizer: aws_iam
+          cors: true
   delete-watchlist:
     handler: delete-watchlist.main
     events:
@@ -52,3 +54,12 @@ functions:
           path: watchlist
           method: delete
           authorizer: aws_iam
+          cors: true
+  get-watchlists:
+    handler: get-watchlists.main
+    events:
+      - http:
+          path: watchlist
+          method: get
+          authorizer: aws_iam
+          cors: true

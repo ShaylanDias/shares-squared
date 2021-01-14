@@ -1,0 +1,8 @@
+{
+  "body": "{\"symbols\":[\"MMM\",\"FNDA\",\"CXSE\"],\"watchlist\":\"TestList2\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "TestUser1234"
+    }
+  }
+}
