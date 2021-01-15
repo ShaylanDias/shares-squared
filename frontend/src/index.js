@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Amplify } from 'aws-amplify';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import config from './config';
 import './index.css';
@@ -33,7 +34,9 @@ Amplify.configure({
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <App />
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
