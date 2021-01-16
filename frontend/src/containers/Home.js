@@ -5,8 +5,8 @@ export default function Home() {
   return (
     <div className="Home">
       <div className="lander">
-        <h1>Scratch</h1>
-        <p className="text-muted">A simple note taking app</p>
+        <h1>Stonks</h1>
+        <p className="text-muted">Make fun of your friends over at r/WSB</p>
       </div>
     </div>
   );

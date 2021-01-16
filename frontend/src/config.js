@@ -1,7 +1,7 @@
 const config = {
   s3: {
     REGION: "us-west-1",
-    BUCKET: "YOUR_S3_UPLOADS_BUCKET_NAME",
+    BUCKET: "stocks-vibes",
   },
   apiGateway: {
     REGION: "us-west-1",
