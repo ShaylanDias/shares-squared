@@ -4,7 +4,7 @@ Resources:
     Properties:
       ResponseParameters:
          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-         gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+         gatewayresponse.header.Access-Control-Allow-Headers: "'GET, POST, OPTIONS, PUT, DELETE'"
       ResponseType: DEFAULT_4XX
       RestApiId:
         Ref: 'ApiGatewayRestApi'
@@ -13,7 +13,7 @@ Resources:
     Properties:
       ResponseParameters:
          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-         gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+         gatewayresponse.header.Access-Control-Allow-Headers: "'GET, POST, OPTIONS, PUT, DELETE'"
       ResponseType: DEFAULT_5XX
       RestApiId:
         Ref: 'ApiGatewayRestApi'

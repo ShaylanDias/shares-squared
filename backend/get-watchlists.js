@@ -31,39 +31,43 @@ export const main = handler(async (event, context) => {
     items[i].symbols.forEach(symbol => allSymbols.add(symbol));
   }
 
-  console.log(allSymbols.values());
   const symbolString = Array.from(allSymbols.values()).join(',');
 
-  var req = unirest("GET", "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes");
+  console.log(symbolString);
 
-  req.query({
-    "region": "US",
-    "symbols": symbolString,
-  });
+  if (symbolString.length > 0) {
 
-  req.headers({
-    "x-rapidapi-key": process.env.RAPIDAPI_KEY,
-    "x-rapidapi-host": process.env.RAPIDAPI_HOST,
-    "useQueryString": true
-  });
+    var req = unirest("GET", "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes");
 
-  const res = await req.send();
-  if (res.error) throw new Error(res.error);
+    req.query({
+      "region": "US",
+      "symbols": symbolString,
+    });
 
-  console.log(res.body);
+    req.headers({
+      "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+      "x-rapidapi-host": process.env.RAPIDAPI_HOST,
+      "useQueryString": true
+    });
 
-  const stockData = {};
-  for (let result of res.body.quoteResponse.result) {
-    stockData[result.symbol] = result;
-  }
+    const res = await req.send();
+    if (res.error) throw new Error(res.error);
 
-  for (let i = 0; i < result.Items.length; i++) {
-    let newItems = [];
+    console.log(res.body);
 
-    for (let symbol of result.Items[i].symbols) {
-      newItems.push(stockData[symbol]);
+    const stockData = {};
+    for (let result of res.body.quoteResponse.result) {
+      stockData[result.symbol] = result;
     }
-    result.Items[i].symbols = newItems;
+
+    for (let i = 0; i < result.Items.length; i++) {
+      let newItems = [];
+
+      for (let symbol of result.Items[i].symbols) {
+        newItems.push(stockData[symbol]);
+      }
+      result.Items[i].symbols = newItems;
+    }
   }
 
   return result.Items;

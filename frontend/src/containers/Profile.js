@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { API } from "aws-amplify";
-import { Table, InputGroup, FormControl } from "react-bootstrap";
+import { Table, InputGroup, Button, FormControl } from "react-bootstrap";
 import _ from "lodash";
 
 import { onError } from "../libs/errorLib";
@@ -35,8 +35,20 @@ export default function Profile({ username }) {
     const data = {
       name: createListRef.current.value
     };
-    console.log(data);
     API.post("stonks", "/watchlist", {body: data})
+    .then(() => getWatchlists())
+    .catch(e => {
+      console.log(e);
+      onError(e);
+    })
+  }
+
+  const deleteWatchlist = (watchlist) => {
+    const data = {
+      name: watchlist
+    };
+    console.log(data);
+    API.del("stonks", "/watchlist", {body: data})
     .then(() => getWatchlists())
     .catch(e => {
       console.log(e);
@@ -56,6 +68,20 @@ export default function Profile({ username }) {
       onError(e);
     })
   }
+
+  const removeSymbol = (symbol, watchlist) => {
+    console.log(symbol);
+    const data = {
+      symbols: [symbol],
+      watchlist
+    };
+    API.del("stonks", "/symbols", {body: data})
+    .then(() => getWatchlists())
+    .catch(e => {
+      onError(e);
+    })
+  }
+
 
   const genTables = (data) => {
     let tables = [];
@@ -92,19 +118,31 @@ export default function Profile({ username }) {
                     <td>{item.regularMarketChangePercent}</td>
                     <td>{item.pegRatio}</td>
                     <td>{item.dividendYield}</td>
+                    <td>
+                      <Button variant="danger" onClick={removeSymbol.bind(this, item.symbol, tableData.watchlistId)}>
+                        X
+                      </Button>
+                    </td>
                   </tr>
               })}
               <tr>
-                <InputGroup className="mb-3">
-                  <FormControl
-                    ref={ref}
-                    placeholder="Add Symbol"
-                    aria-describedby="basic-addon2"
-                  />
-                  <InputGroup.Append>
-                    <LoaderButton isLoading={false} onClick={() => addSymbol(ref.current.value, tableData.watchlistId)}>Add</LoaderButton>
-                  </InputGroup.Append>
-                </InputGroup>
+                <td>
+                  <InputGroup className="mb-3">
+                    <FormControl
+                      ref={ref}
+                      placeholder="Add Symbol"
+                      aria-describedby="basic-addon2"
+                    />
+                    <InputGroup.Append>
+                      <LoaderButton isLoading={false} onClick={() => addSymbol(ref.current.value, tableData.watchlistId)}>Add</LoaderButton>
+                    </InputGroup.Append>
+                  </InputGroup>
+                </td>
+                <td>
+                  <Button variant="danger" onClick={deleteWatchlist.bind(this, tableData.watchlistId)}>
+                    Delete
+                  </Button>
+                </td>
               </tr>
             </tbody>
           </Table>

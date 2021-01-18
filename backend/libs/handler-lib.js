@@ -19,6 +19,7 @@ export default function handler(lambda) {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE"
       },
     };
   };
