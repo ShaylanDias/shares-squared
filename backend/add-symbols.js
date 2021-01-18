@@ -1,4 +1,3 @@
-// import * as uuid from "uuid";
 import handler from "./libs/handler-lib";
 import dynamoDb from './libs/dynamodb-lib';
 import unirest from "unirest";
@@ -59,17 +58,6 @@ export const main = handler(async (event, context) => {
   if (invalid.length > 0) {
     throw new Error(`Invalid tickers: ${invalid}`);
   }
-
-  // const params = {
-  //   TableName: tableName,
-  //   Item: {
-  //     // The attributes of the item to be created
-  //     userId: id, // The id of the author
-  //     watchlistId: data.watchlist, // A unique uuid
-  //     symbols: dynamoDb.createSet(symbols),
-  //     createdAt: Date.now(), // Current Unix timestamp
-  //   },
-  // };
 
   const params = {
     TableName: tableName,

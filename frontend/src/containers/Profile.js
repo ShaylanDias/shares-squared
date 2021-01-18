@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { API } from "aws-amplify";
-import { Table, Button, InputGroup, FormControl } from "react-bootstrap";
+import { Table, InputGroup, FormControl } from "react-bootstrap";
+import _ from "lodash";
 
 import { onError } from "../libs/errorLib";
 import "./Profile.css";
 import LoaderButton from "../components/LoaderButton";
+
 
 export default function Profile({ username }) {
 
@@ -14,20 +16,22 @@ export default function Profile({ username }) {
   console.log(watchlists);
 
   useEffect(() => {
-    getWatchlists()
-  })
+    console.log("useffect");
+    getWatchlists(watchlists)
+  }, [watchlists])
 
-  const getWatchlists = () => {
-    API.get("stonks", "/watchlist").then(
-      res => {
-        // This is a kind of trash but functional way of comparing two objects.
-        if (JSON.stringify(res) !== JSON.stringify(watchlists))
-          setWatchlists(res);
-      }
-    ).catch(e => {
-      console.log(e);
-      onError(e);
-    });
+  console.log("RERENDER");
+
+  const getWatchlists = (watchlists) => {
+      API.get("stonks", "/watchlist").then(
+        res => {
+          if (!_.isEqual(res, watchlists))
+            setWatchlists(res);
+        }
+      ).catch(e => {
+        console.log(e);
+        onError(e);
+      });
   }
 
   const createWatchlist = () => {
@@ -36,6 +40,7 @@ export default function Profile({ username }) {
     };
     console.log(data);
     API.post("stonks", "/watchlist", {body: data})
+    .then(() => getWatchlists())
     .catch(e => {
       console.log(e);
       onError(e);
@@ -70,13 +75,14 @@ export default function Profile({ username }) {
               </tr>
             </thead>
             <tbody>
-              {tableData.symbols.map(symbol =>
-              symbol === "" ? 
-              null
-              :
-                <tr key={symbol}>
-                  <td>{symbol}</td>
-                </tr>)}
+              {tableData.symbols.map(item => {
+                return item === null ? 
+                null
+                :
+                  <tr key={item.symbol}>
+                    <td>{item.symbol}</td>
+                  </tr>
+              })}
               <tr>
                 <InputGroup className="mb-3">
                   <FormControl
@@ -85,7 +91,7 @@ export default function Profile({ username }) {
                     aria-describedby="basic-addon2"
                   />
                   <InputGroup.Append>
-                    <LoaderButton isLoading={false} onClick={() => addSymbol(ref.current.value, tableData.watchlistId)}>Create</LoaderButton>
+                    <LoaderButton isLoading={false} onClick={() => addSymbol(ref.current.value, tableData.watchlistId)}>Add</LoaderButton>
                   </InputGroup.Append>
                 </InputGroup>
               </tr>
