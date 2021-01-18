@@ -16,11 +16,8 @@ export default function Profile({ username }) {
   console.log(watchlists);
 
   useEffect(() => {
-    console.log("useffect");
     getWatchlists(watchlists)
   }, [watchlists])
-
-  console.log("RERENDER");
 
   const getWatchlists = (watchlists) => {
       API.get("stonks", "/watchlist").then(
@@ -72,6 +69,13 @@ export default function Profile({ username }) {
             <thead>
               <tr>
                 <th>Symbol</th>
+                <th>Name</th>
+                <th>Bid</th>
+                <th>50 Day Avg.</th>
+                <th>Market Change ($)</th>
+                <th>Market Change (%)</th>
+                <th>Peg Ratio</th>
+                <th>Dividend Yield</th>
               </tr>
             </thead>
             <tbody>
@@ -81,6 +85,13 @@ export default function Profile({ username }) {
                 :
                   <tr key={item.symbol}>
                     <td>{item.symbol}</td>
+                    <td>{item.longName}</td>
+                    <td>{item.bid}</td>
+                    <td>{item.fiftyDayAverage}</td>
+                    <td>{item.regularMarketChange}</td>
+                    <td>{item.regularMarketChangePercent}</td>
+                    <td>{item.pegRatio}</td>
+                    <td>{item.dividendYield}</td>
                   </tr>
               })}
               <tr>
