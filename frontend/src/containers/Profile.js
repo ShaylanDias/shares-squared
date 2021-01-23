@@ -164,7 +164,6 @@ export default function Profile({ username }) {
           <FormControl
             ref={createListRef}
             placeholder="Watchlist name"
-            aria-label="Recipient's username"
             aria-describedby="basic-addon2"
           />
           <InputGroup.Append>
