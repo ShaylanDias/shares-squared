@@ -76,7 +76,7 @@ functions:
     handler: get-watchlists.main
     events:
       - http:
-          path: watchlist
+          path: watchlist/{id}
           method: get
           authorizer: aws_iam
           cors: true
@@ -92,7 +92,7 @@ functions:
     handler: add-friend.main
     events:
       - http:
-          path: friend
+          path: user-relation
           method: post
           authorizer: aws_iam
           cors: true

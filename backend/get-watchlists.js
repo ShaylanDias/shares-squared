@@ -4,26 +4,66 @@ import dynamoDb from "./libs/dynamodb-lib";
 import unirest from "unirest";
 
 export const main = handler(async (event, context) => {
-  const id = event.requestContext.identity.cognitoIdentityId;
+
+  const callerId = event.requestContext.identity.cognitoIdentityId;
+  const pathId = event.pathParameters ? event.pathParameters.id : null;
+
+  const id = pathId || callerId;
+
+  let isFriend = false;
+  let isUser = false;
+
+  // Do a check for privileges on watchlists
+  if (id !== callerId) {
+    const params = {
+      TableName: "user-relations",
+      KeyConditionExpression: "userId = :userId AND otherUserId = :otherUserId",
+      // Set up like this since we are checking against the other user's settings, not this user's
+      ExpressionAttributeValues: {
+        ":userId": id,
+        ":otherUserId": callerId,
+      },
+    };
+
+    const result = await dynamoDb.query(params);
+
+    if (result.Items.length > 0) {
+      isFriend = result.Items[0].relationship === "FRIEND";
+      if (result.Items[0].relationship === "BLOCKED") {
+        throw "This user blocked you";
+      }
+    }
+  } else {
+    isFriend = true;
+    isUser = true;
+  }
+
+  let expressionValues = {
+    ":userId": id,
+    ":public": "PUBLIC",
+  };
+
+  if (isFriend) {
+    expressionValues[":friends"] = "FRIENDS";
+  }
+  if (isUser) {
+    expressionValues[":private"] = "PRIVATE";
+  }
 
   const params = {
     TableName: "watchlists",
-    // 'KeyConditionExpression' defines the condition for the query
-    // - 'userId = :userId': only return items with matching 'userId'
-    //   partition key
-    KeyConditionExpression: "userId = :userId",
-    // 'ExpressionAttributeValues' defines the value in the condition
-    // - ':userId': defines 'userId' to be the id of the author
-    ExpressionAttributeValues: {
-      ":userId": id,
-    },
+    FilterExpression: `userId = :userId AND privacy = :public${isFriend ? " OR privacy = :friends" : ""}${isUser ? " OR privacy = :private" : ""}`,
+    ExpressionAttributeValues: expressionValues,
   };
 
-  const result = await dynamoDb.query(params);
+  console.log(params);
+
+  const result = await dynamoDb.scan(params);
 
   console.log(result.Items);
 
   let items = result.Items;
+
   let allSymbols = new Set();
 
   for (let i = 0; i < items.length; i++) {

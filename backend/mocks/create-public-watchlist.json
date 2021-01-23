@@ -1,0 +1,8 @@
+{
+  "body": "{\"name\": \"TestList\", \"privacy\": \"PUBLIC\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "TestUser1234"
+    }
+  }
+}
