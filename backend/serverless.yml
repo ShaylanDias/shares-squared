@@ -88,7 +88,7 @@ functions:
           method: get
           authorizer: aws_iam
           cors: true
-  add-friend:
+  add-relation:
     handler: add-relation.main
     events:
       - http:

@@ -10,7 +10,7 @@ import FriendList from "../components/FriendList";
 import Table from "../components/Table";
 
 
-export default function Profile() {
+export default function Profile({ otherUserId }) {
 
   const [watchlists, setWatchlists] = useState([]);
   const [userId, setUserId] = useState(null);
@@ -58,7 +58,7 @@ export default function Profile() {
 
     for (const tableData of data) {
       tables.push(
-        <Table tableData={tableData} getWatchlists={getWatchlists} />
+        <Table tableData={tableData} getWatchlists={getWatchlists} userId={userId} />
       )
     }
 

@@ -17,11 +17,7 @@ export const main = handler(async (event, context) => {
     },
   };
 
-  console.log(params);
-
   const result = await dynamoDb.scan(params);
-
-  console.log(result.Items);
 
   let friends = [];
 

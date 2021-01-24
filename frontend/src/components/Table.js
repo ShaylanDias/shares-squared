@@ -1,14 +1,16 @@
 import React, { useState, useRef } from "react";
 import { Table as BootstrapTable, InputGroup, Button, FormControl, Form } from "react-bootstrap";
-import { API, Auth } from "aws-amplify";
+import { API } from "aws-amplify";
 
 import LoaderButton from "../components/LoaderButton";
 import { onError } from "../libs/errorLib";
 
-export default function Table({ tableData, getWatchlists }) {
+export default function Table({ tableData, getWatchlists, userId }) {
 
   const [privacy, setPrivacy] = useState(tableData.privacy.charAt(0) + tableData.privacy.toLowerCase().slice(1));
   const formRef = useRef(null);
+
+  const isUserTable = userId === tableData.userId;
 
   const handleTableChange = (event) => {
     event.preventDefault();
@@ -75,15 +77,17 @@ export default function Table({ tableData, getWatchlists }) {
             <th>Market Change (%)</th>
             <th>Peg Ratio</th>
             <th>Dividend Yield</th>
-            <th>
-              <Form.Group>
-                <Form.Control style={{ width: "100px" }} as="select" onChange={handleTableChange} value={privacy}>
-                  <option>Private</option>
-                  <option>Public</option>
-                  <option>Friends</option>
-                </Form.Control>
-              </Form.Group>
-            </th>
+            {isUserTable &&
+              <th>
+                <Form.Group>
+                  <Form.Control style={{ width: "100px" }} as="select" onChange={handleTableChange} value={privacy}>
+                    <option>Private</option>
+                    <option>Public</option>
+                    <option>Friends</option>
+                  </Form.Control>
+                </Form.Group>
+              </th>
+            }
           </tr>
         </thead>
         <tbody>
@@ -100,32 +104,36 @@ export default function Table({ tableData, getWatchlists }) {
                 <td>{item.regularMarketChangePercent}</td>
                 <td>{item.pegRatio}</td>
                 <td>{item.dividendYield}</td>
-                <td>
-                  <Button variant="danger" onClick={removeSymbol.bind(this, item.symbol, tableData.watchlistId)}>
-                    X
-                    </Button>
-                </td>
+                {isUserTable &&
+                  <td>
+                    <Button variant="danger" onClick={removeSymbol.bind(this, item.symbol, tableData.watchlistId)}>
+                      X
+                      </Button>
+                  </td>
+                }
               </tr>
           })}
-          <tr>
-            <td>
-              <InputGroup className="mb-3">
-                <FormControl
-                  ref={formRef}
-                  placeholder="Add Symbol"
-                  aria-describedby="basic-addon2"
-                />
-                <InputGroup.Append>
-                  <LoaderButton isLoading={false} onClick={() => addSymbol(formRef.current.value, tableData.watchlistId)}>Add</LoaderButton>
-                </InputGroup.Append>
-              </InputGroup>
-            </td>
-            <td>
-              <Button variant="danger" onClick={deleteWatchlist.bind(this, tableData.watchlistId)}>
-                Delete
-                </Button>
-            </td>
-          </tr>
+          {isUserTable &&
+            <tr>
+              <td>
+                <InputGroup className="mb-3">
+                  <FormControl
+                    ref={formRef}
+                    placeholder="Add Symbol"
+                    aria-describedby="basic-addon2"
+                  />
+                  <InputGroup.Append>
+                    <LoaderButton isLoading={false} onClick={() => addSymbol(formRef.current.value, tableData.watchlistId)}>Add</LoaderButton>
+                  </InputGroup.Append>
+                </InputGroup>
+              </td>
+              <td>
+                <Button variant="danger" onClick={deleteWatchlist.bind(this, tableData.watchlistId)}>
+                  Delete
+                  </Button>
+              </td>
+            </tr>
+          }
         </tbody>
       </BootstrapTable>
     </React.Fragment>

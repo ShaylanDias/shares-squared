@@ -16,10 +16,10 @@ export const main = handler(async (event, context) => {
   const data = JSON.parse(event.body);
   const id = event.requestContext.identity.cognitoIdentityId;
 
-  let otherUserId = data.otherUserId;
-  let relationship = data.relationship;
+  const otherUserId = data.otherUserId;
+  const relationship = data.relationship;
 
-  if (RELATIONSHIP_OPTIONS.indexOf(relationship < 0)) {
+  if (RELATIONSHIP_OPTIONS.indexOf(relationship) < 0) {
     throw `Invalid enum option, must be one of: ${RELATIONSHIP_OPTIONS}`;
   }
 
