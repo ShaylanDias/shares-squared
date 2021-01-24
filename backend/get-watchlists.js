@@ -6,7 +6,10 @@ import unirest from "unirest";
 export const main = handler(async (event, context) => {
 
   const callerId = event.requestContext.identity.cognitoIdentityId;
-  const pathId = event.pathParameters ? event.pathParameters.id : null;
+  let pathId = event.pathParameters ? event.pathParameters.id : null;
+  if (pathId === "self") {
+    pathId = null;
+  }
 
   const id = pathId || callerId;
 
@@ -52,7 +55,7 @@ export const main = handler(async (event, context) => {
 
   const params = {
     TableName: "watchlists",
-    FilterExpression: `userId = :userId AND privacy = :public${isFriend ? " OR privacy = :friends" : ""}${isUser ? " OR privacy = :private" : ""}`,
+    FilterExpression: `userId = :userId AND (privacy = :public${isFriend ? " OR privacy = :friends" : ""}${isUser ? " OR privacy = :private" : ""})`,
     ExpressionAttributeValues: expressionValues,
   };
 

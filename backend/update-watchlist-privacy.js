@@ -16,16 +16,17 @@ export const main = handler(async (event, context) => {
 
   const params = {
     TableName: "watchlists",
-    Item: {
-      // The attributes of the item to be created
-      userId: id, // The id of the author
-      watchlistId: name, // A unique uuid
-      symbols: dynamoDb.createSet([""]),
-      privacy: privacySetting
+    Key: {
+      userId: id,
+      watchlistId: name,
+    },
+    UpdateExpression: "SET privacy = :privacy",
+    ExpressionAttributeValues: {
+      ":privacy": privacySetting
     },
   };
 
-  await dynamoDb.put(params);
+  await dynamoDb.update(params);
 
-  return params.Item;
+  return { status: true };
 });

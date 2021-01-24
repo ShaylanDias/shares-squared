@@ -1,0 +1,8 @@
+{
+  "body": "{\"relation\":\"FRIEND\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "TestUser1234"
+    }
+  }
+}

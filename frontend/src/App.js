@@ -20,7 +20,7 @@ function App() {
   useEffect(() => {
     onLoad();
   }, []);
-  
+
   async function onLoad() {
     try {
       await Auth.currentSession();
@@ -51,6 +51,11 @@ function App() {
               Stonks
             </Navbar.Brand>
           </LinkContainer>
+          {isAuthenticated && <LinkContainer to="/profile">
+            <Navbar.Brand className="font-weight-bold text-muted">
+              Profile
+            </Navbar.Brand>
+          </LinkContainer>}
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
             <Nav activeKey={window.location.pathname}>

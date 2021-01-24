@@ -89,10 +89,26 @@ functions:
           authorizer: aws_iam
           cors: true
   add-friend:
-    handler: add-friend.main
+    handler: add-relation.main
     events:
       - http:
           path: user-relation
+          method: post
+          authorizer: aws_iam
+          cors: true
+  get-relations:
+    handler: get-relations.main
+    events:
+      - http:
+          path: user-relation
+          method: get
+          authorizer: aws_iam
+          cors: true
+  update-watchlist-privacy:
+    handler: update-watchlist-privacy.main
+    events:
+      - http:
+          path: watchlist-update
           method: post
           authorizer: aws_iam
           cors: true

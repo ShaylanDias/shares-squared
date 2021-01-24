@@ -44,10 +44,6 @@ export const main = handler(async (event, context) => {
   const data = JSON.parse(event.body);
   const id = event.requestContext.identity.cognitoIdentityId;
 
-  // check user ID permissions
-
-  // throw error if watchlist does not exist
-
   // Check stock symbol validity
   const symbols = data.symbols;
   // Resolve validity on all symbols asynchronously
