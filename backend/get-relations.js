@@ -2,18 +2,17 @@ import handler from "./libs/handler-lib";
 import dynamoDb from "./libs/dynamodb-lib";
 
 export const main = handler(async (event, context) => {
-  const data = JSON.parse(event.body);
   const id = event.requestContext.identity.cognitoIdentityId;
 
-  const relation = data.relation;
+  const relationship = event.pathParameters.relationship;
 
   const params = {
     TableName: "user-relations",
-    FilterExpression: "otherUserId = :userId AND relationship = :relation",
+    FilterExpression: "otherUserId = :userId AND relationship = :relationship",
     // Set up like this since we are checking against the other user's settings, not this user's
     ExpressionAttributeValues: {
       ":userId": id,
-      ":relation": relation,
+      ":relationship": relationship,
     },
   };
 

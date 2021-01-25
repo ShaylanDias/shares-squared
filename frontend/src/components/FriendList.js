@@ -18,50 +18,42 @@ export default function FriendList({ username }) {
 
 
   useEffect(() => {
-    console.log("USE EFFECT")
     getFriends();
   }, [username]);
 
   const getFriends = () => {
-    // API.get("stonks", "/user-relation", { body: { relation: "FRIEND" }}).then(
-    //   res => {
-    //     setFriends(res.body);
-    //   }
-    // ).catch(err => onError(err));
+    API.get("stonks", "/user-relation/FRIEND")
+    .then(res => setFriends(res))
+    .catch(err => onError(err));
   }
 
   const addFriend = () => {
-
     const data = {
       relationship: "FRIEND",
       otherUserId: addFriendRef.current.value
     }
     API.post("stonks", "/user-relation", { body: data })
-    .then(res => {
-      console.log(res)
-      setIsAddLoading(false);
-
-    })
     .catch(err => {
       onError(err);
-      setIsAddLoading(false);
-    });
+    })
+    .finally(() => setIsAddLoading(false));
   }
 
-  const handleClick = () => {
+  const handleClick = (username) => {
     history.push(`/profile/${username}`);
   }
 
   const genFriends = (friends) => {
-    return friends.map(username => <ListGroup.Item onClick={handleClick}>{username}</ListGroup.Item>)
+    return friends.map(username => <ListGroup.Item style={{cursor: "pointer"}} onClick={handleClick.bind(this, username)}>{username}</ListGroup.Item>)
   }
 
   return (
     <div>
+      <h1>Friends List</h1>
       <ListGroup>
         {genFriends(friends)}
       </ListGroup>
-      <h2>Your Friend ID: {username}</h2>
+      <br />
       <InputGroup className="mb-3">
           <FormControl
             ref={addFriendRef}
@@ -77,6 +69,7 @@ export default function FriendList({ username }) {
             </LoaderButton>
           </InputGroup.Append>
         </InputGroup>
+        <h2>Your Friend ID: {username}</h2>
     </div>
   );
 }

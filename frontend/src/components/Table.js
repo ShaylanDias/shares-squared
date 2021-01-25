@@ -1,16 +1,22 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Table as BootstrapTable, InputGroup, Button, FormControl, Form } from "react-bootstrap";
-import { API } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
 
 import LoaderButton from "../components/LoaderButton";
 import { onError } from "../libs/errorLib";
 
-export default function Table({ tableData, getWatchlists, userId }) {
+export default function Table({ tableData, getWatchlists}) {
 
   const [privacy, setPrivacy] = useState(tableData.privacy.charAt(0) + tableData.privacy.toLowerCase().slice(1));
   const formRef = useRef(null);
 
-  const isUserTable = userId === tableData.userId;
+  const [actualUserId, setActualUserId] = useState("");
+
+  useEffect(() => {
+    Auth.currentUserInfo().then(res => setActualUserId(res.id));
+  }, [actualUserId])
+
+  const isUserTable = actualUserId === tableData.userId;
 
   const handleTableChange = (event) => {
     event.preventDefault();

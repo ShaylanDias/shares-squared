@@ -21,6 +21,9 @@ export default function Routes() {
       <Route exact path="/profile">
         <Profile />
       </Route>
+      <Route exact path="/profile/:otherUserId" children={<Profile />}>
+        <Profile />
+      </Route>
       <Route>
         <NotFound />
       </Route>

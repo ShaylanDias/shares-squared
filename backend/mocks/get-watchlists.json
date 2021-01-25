@@ -1,7 +1,7 @@
 {
   "requestContext": {
     "identity": {
-      "cognitoIdentityId": "TestUser1234"
+      "cognitoIdentityId": "us-west-1:c089e6b4-ef8c-443a-8d82-2c0fafc57a88"
     }
   }
 }

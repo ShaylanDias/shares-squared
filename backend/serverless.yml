@@ -80,6 +80,14 @@ functions:
           method: get
           authorizer: aws_iam
           cors: true
+  get-own-watchlists:
+    handler: get-watchlists.main
+    events:
+      - http:
+          path: watchlist
+          method: get
+          authorizer: aws_iam
+          cors: true
   stock-info:
     handler: stock-info.main
     events:
@@ -100,7 +108,7 @@ functions:
     handler: get-relations.main
     events:
       - http:
-          path: user-relation
+          path: user-relation/{relationship}
           method: get
           authorizer: aws_iam
           cors: true
